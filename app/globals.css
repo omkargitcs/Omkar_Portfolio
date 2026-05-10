@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* 1. Global Base Styles */
+@layer base {
+  body {
+    background-color: #141414;
+    color: white;
+    overflow-x: hidden;
+  }
+}
+
+/* 2. Custom Utilities (Moved out of any layers) */
+@utility netflix-red {
+  background-color: #E50914;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+@utility netflix-red-hover {
+  &:hover {
+    background-color: #b20710;
+  }
+}
+
+@utility hero-gradient {
+  background: linear-gradient(to top, #141414 0%, rgba(20, 20, 20, 0) 100%);
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility scrollbar-hide-webkit {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
