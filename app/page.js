@@ -172,53 +172,73 @@ export default function HOME() {
         id="home"
         className="relative h-[85vh] w-full flex flex-col justify-center px-8 md:px-16 bg-gradient-to-b from-black/20 to-[#141414]"
       >
-        <div className="absolute inset-0 z-0 opacity-200">
+        <div className="absolute inset-0 z-0">
+          {/* MOBILE IMAGE: Shows only on small screens (hidden on md+) */}
           <img
-            src="/hero (1).png"
-            alt="Omkar Bhalsing"
-            className="h-full w-full object-cover object-top opacity-100"
-            style={{
-              maskImage: "linear-gradient(to right,transparent,black 40%)",
-              WebkitMaskImage:
-                "linear-gradient(to right,transparent,black 40%)",
-            }}
+            src="/hero_1_2.png"
+            alt="Omkar Bhalsing Mobile"
+            className="block md:hidden h-full w-full object-cover object-center opacity-80"
           />
 
-          <div className="absolute inset-0 bg-[url('/hero-bg-code.jpg')] bg-cover bg-center filter blur-sm" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black"></div>
+          {/* DESKTOP IMAGE: Shows only on medium screens and up (hidden on small) */}
+          <img
+            src="/hero (1).png"
+            alt="Omkar Bhalsing Desktop"
+            className="hidden md:block h-full w-full object-cover object-top opacity-100"
+          />
+
+          {/* --- GRADIENT OVERLAYS (The Netflix Secret Sauce) --- */}
+
+          {/* 1. The Mobile-First Darkener: Ensures text is ALWAYS readable on phones */}
+          <div className="absolute inset-0 bg-black/40 md:hidden" />
+
+          {/* 2. The Horizontal Fade: Fades image to black on the left (Desktop) */}
+          <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/60 to-transparent" />
+
+          {/* 3. The Bottom Fade: Blends the hero image into your 'Trending Skills' row */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
         </div>
-        <div className="z-10 max-w-2xl mt-20">
-          <h2 className="text-[#E50914] font-bold text-sm md:text-lg mb-2 tracking-widest uppercase">
-            A MITHIBAI ORIGINAL
-          </h2>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-4">
+
+        <div className="flex-grow" />
+
+        {/* --- THE CONTENT LAYER --- */}
+        <div className="z-10 max-w-2xl mb-20 md:mb-16 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="text-[#E50914] font-black text-[10px] md:text-sm tracking-[0.4em] uppercase">
+              A Mithibai Original
+            </span>
+          </div>
+
+          <h1 className="text-4xl md:text-7xl font-black text-white mb-3 tracking-tighter drop-shadow-2xl">
             Omkar Bhalsing
           </h1>
-          <h1 className="flex items-center space-x-4 mb-5 text-green-400 font-bold text-lg">
-            <span>8.67 CGPA</span>
-            <span className="border border-gray-600 px-2 py-0.5 text-xs text-gray-300 rounded-sm">
-              Backend Developer
+
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-6 text-xs md:text-lg font-bold">
+            <span className="text-green-400">8.67 CGPA</span>
+            <span className="text-gray-500">|</span>
+            <span className="text-white border border-gray-600 px-2 py-0.5 text-[8px] rounded-sm uppercase">
+              2026 Season
             </span>
-            <span>2026 Season</span>
-          </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed shadow-sm">
-            COMPUTER SCIENCE STUDENT AND FULL STACK DEVELOPER SPECIALIZING IN
-            THE PERN STACK. CURRENTLY ENGINEERING HIGH-CONVERSION UI ASSETS AS A
-            SHOPIFY DEVELOPER INTERN.
+            <span className="text-gray-500">|</span>
+            <span className="text-white">Full Stack</span>
+          </div>
+
+          <p className="text-sm md:text-lg text-gray-200 mb-8 leading-relaxed max-w-[300px] md:max-w-xl font-medium drop-shadow-md">
+            COMPUTER SCIENCE STUDENT SPECIALIZING IN THE PERN STACK. SHOPIFY
+            DEVELOPER INTERN AT SCENTIVIA.
           </p>
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <a
               href="https://github.com/omkargitcs"
               target="_blank"
-              className="bg-white text-black px-10 py-3 rounded-md font-bold hover:bg-gray-200 transition text-lg flex items-center shadow-lg"
+              className="bg-white text-black px-10 py-3 rounded-md font-bold hover:bg-gray-200 transition text-sm md:text-lg flex items-center justify-center shadow-2xl active:scale-95"
             >
-              View Work(GitHub)
+              View Work
             </a>
             <a
               href="https://drive.google.com/file/d/1zfIHksniQ28jLFDyK5iFGhsNBnL2jc7w/view?usp=drivesdk"
               target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-500/40 text-white px-10 py-3 rounded font-bold hover:bg-gray-500/70 transition text-lg flex items-center justify-center backdrop-blur-sm active:scale-95 shadow-md"
+              className="bg-zinc-800/80 text-white px-10 py-3 rounded-md font-bold hover:bg-zinc-700 transition text-sm md:text-lg flex items-center justify-center backdrop-blur-md border border-white/10 active:scale-95"
             >
               More Info
             </a>
