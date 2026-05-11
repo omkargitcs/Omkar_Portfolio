@@ -22,7 +22,7 @@ const SkillCard = ({ title, category, progress, icon, onClick }) => {
         </div>
 
         {/* Small vibrant icon in the corner */}
-        <div className="text-4xl text-zinc-700 group-hover:text-white group-hover:scale-110 transition-all duration-500">
+        <div className="text-3xl text-zinc-600 group-hover:text-white group-hover:scale-110 transition-all duration-500">
           {icon}
         </div>
       </div>
