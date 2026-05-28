@@ -2,7 +2,7 @@
 
 A high-performance, responsive full-stack developer portfolio built with a customized streaming-service aesthetic. This platform adapts advanced art direction techniques to display software engineering metrics, academic trajectories, and technical skills as high-impact "Featured Originals" and "Trending Content Rows."
 
-Live Link: [your-portfolio-link.vercel.app](https://your-portfolio-link.vercel.app)
+Live Link: [https://omkar-portfolio-cyan.vercel.app/](https://omkar-portfolio-cyan.vercel.app/)
 
 ---
 
@@ -27,7 +27,7 @@ Live Link: [your-portfolio-link.vercel.app](https://your-portfolio-link.vercel.a
 
 ## 📂 Repository Structure
 
-```text
+text
 ├── app/
 │   ├── layout.js          # Core document wrapping & global fonts
 │   └── page.js            # Home view containing Hero and Dashboard rows
@@ -43,7 +43,7 @@ Live Link: [your-portfolio-link.vercel.app](https://your-portfolio-link.vercel.a
 
 
 
-💻 Local Installation & Setup Steps
+##💻 Local Installation & Setup Steps
 Follow these explicit terminal instructions to get the development environment running locally on your machine.
 
 1. Clone the Project
