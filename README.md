@@ -27,7 +27,7 @@ Live Link: [https://omkar-portfolio-cyan.vercel.app/](https://omkar-portfolio-cy
 
 ## 📂 Repository Structure
 
-text
+```text
 ├── app/
 │   ├── layout.js          # Core document wrapping & global fonts
 │   └── page.js            # Home view containing Hero and Dashboard rows
@@ -70,7 +70,7 @@ Bash
 npm run dev
 Open your browser and navigate to http://localhost:3000 to test your application.
 
-🚢 Continuous Deployment to Vercel
+##🚢 Continuous Deployment to Vercel
 This repository relies on automated GitHub triggers. Every push to the main repository automatically updates the production build.
 
 Executing Code Updates:
