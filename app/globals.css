@@ -1,39 +1,265 @@
 @import "tailwindcss";
 
-/* 1. Global Base Styles */
-@layer base {
-  body {
-    background-color: #141414;
+@theme {
+  --color-ink: #0e0d0d;
+  --color-panel: #161413;
+  --color-line: rgba(255, 244, 235, 0.09);
+  --color-fg: #ece7e1;
+  --color-muted: #a39a92;
+  --color-accent: #e0464c;
+  --color-amber: #e8b36a;
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  min-height: 100svh;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* faint paper grain so the dark background isn't flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 75%);
+}
+
+/* ---------- scroll reveal ----------
+   Content is visible by default. Only once JS has started (html.reveal-on) are
+   below-the-fold blocks hidden, and each one is shown for good when it enters view. */
+.reveal-on .reveal:not(.in) {
+  opacity: 0;
+}
+.reveal-on .reveal.in {
+  animation: rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- hero entrance ---------- */
+.hero-in {
+  animation: heroIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- spotlight card ---------- */
+.spot {
+  position: relative;
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  transition: border-color 0.3s, transform 0.3s;
+  isolation: isolate;
+}
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(224, 70, 76, 0.14),
+    transparent 60%
+  );
+}
+@media (hover: hover) {
+  .spot:hover {
+    border-color: rgba(224, 70, 76, 0.4);
+  }
+  .spot:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ---------- chips ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: rgba(255, 255, 255, 0.025);
+  color: #d9d2ca;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+@media (hover: hover) {
+  .chip:hover {
+    border-color: var(--color-accent);
     color: white;
-    overflow-x: hidden;
+    transform: translateY(-2px);
   }
 }
 
-/* 2. Custom Utilities (Moved out of any layers) */
-@utility netflix-red {
-  background-color: #E50914;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 0.65rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-line);
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: white;
+}
+.btn-primary:hover {
+  background: #c9393f;
+}
+.btn-ghost:hover {
+  border-color: rgba(255, 244, 235, 0.3);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-@utility netflix-red-hover {
-  &:hover {
-    background-color: #b20710;
+/* ---------- seat demo ---------- */
+.seat {
+  aspect-ratio: 1;
+  border-radius: 6px 6px 3px 3px;
+  border: 1px solid var(--color-line);
+  background: #211e1c;
+  transition: background 0.2s, transform 0.15s, border-color 0.2s;
+}
+.seat:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--color-amber);
+}
+.seat[data-state="held"] {
+  background: var(--color-amber);
+  border-color: var(--color-amber);
+}
+.seat[data-state="taken"] {
+  background: #3a3532;
+  cursor: not-allowed;
+}
+.seat[data-state="target"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(224, 70, 76, 0.2);
+}
+.dot {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #2a2624;
+  transition: background 0.2s, transform 0.2s;
+}
+.dot[data-r="win"] {
+  background: #5fd08a;
+  transform: scale(1.25);
+}
+.dot[data-r="lose"] {
+  background: var(--color-accent);
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .hero-in {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
   }
 }
 
-@utility hero-gradient {
-  background: linear-gradient(to top, #141414 0%, rgba(20, 20, 20, 0) 100%);
+/* ---------- type ---------- */
+.font-display {
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 50, "WONK" 0;
+  letter-spacing: -0.01em;
 }
-
-@utility scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.glyph {
+  display: inline-block;
+  transition: font-variation-settings 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), color 0.3s;
+  font-variation-settings: "SOFT" 0, "WONK" 0, "wght" 400;
 }
-
-@utility scrollbar-hide-webkit {
-  &::-webkit-scrollbar {
-    display: none;
+@media (hover: hover) {
+  .glyph:hover {
+    font-variation-settings: "SOFT" 100, "WONK" 1, "wght" 850;
+    transform: translateY(-0.06em) rotate(-3deg);
+    color: var(--color-amber);
   }
+}
+/* rotating word: all candidates stack in one grid cell so nothing jumps */
+.swap > span {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(0.5em);
+  transition: opacity 0.5s, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.swap > span[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+.hl {
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: 0 100%;
+  transition: background-size 0.3s;
+}
+.hl:hover {
+  background-size: 100% 100%;
+  color: white;
 }

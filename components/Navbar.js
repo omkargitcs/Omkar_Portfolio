@@ -1,123 +1,154 @@
 "use client";
-import { useState, useEffect } from "react";
-import {
-  FaHome,
-  FaTools,
-  FaCode,
-  FaBriefcase,
-  FaEnvelope,
-} from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaBars, FaXmark } from "react-icons/fa6";
+import { profile } from "../lib/data";
 
-const Navbar = () => {
-  const [isScrolled, setisScrolled] = useState(false);
+const links = [
+  { id: "projects", label: "Projects" },
+  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Skills" },
+  { id: "certifications", label: "Certifications" },
+  { id: "contact", label: "Contact" },
+];
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [solid, setSolid] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setisScrolled(window.scrollY > 10);
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      setProgress(max > 0 ? (window.scrollY / max) * 100 : 0);
+      setSolid(window.scrollY > 12);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      window.scrollTo({
-        top: elementPosition - offset,
-        behavior: "smooth",
-      });
-    }
-  };
+  // highlight the section currently in view
+  useEffect(() => {
+    const els = links.map((l) => document.getElementById(l.id)).filter(Boolean);
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => e.isIntersecting && setActive(e.target.id));
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
-    <>
-      {/* --- DESKTOP/TABLET TOP NAV --- */}
-      <nav
-        className={`fixed top-0 z-50 flex w-full items-center justify-between px-4 md:px-16 py-4 transition-all duration-500 ${
-          isScrolled
-            ? "bg-[#141414]/95 backdrop-blur-md shadow-xl"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="flex items-center space-x-8">
-          <h1
-            className="text-[#E50914] text-xl md:text-2xl font-black cursor-pointer tracking-tighter"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            OMKAR
-          </h1>
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        solid || open
+          ? "border-b border-line bg-ink/85 backdrop-blur-md"
+          : "border-b border-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
+        <a href="#top" className="font-display text-xl tracking-tight">
+          Omkar<span className="text-accent">.</span>
+        </a>
 
-          <ul className="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
-            {["Home", "Skills", "Projects", "Experience"].map((item) => (
-              <li
-                key={item}
-                onClick={() =>
-                  item === "Home"
-                    ? window.scrollTo({ top: 0, behavior: "smooth" })
-                    : scrollToSection(item.toLowerCase())
-                }
-                className="cursor-pointer hover:text-white transition-colors duration-300"
-              >
-                {item}
+        <nav aria-label="Primary" className="hidden md:block">
+          <ul className="flex items-center gap-1 text-sm">
+            {links.map((l) => (
+              <li key={l.id}>
+                <a
+                  href={`#${l.id}`}
+                  aria-current={active === l.id ? "true" : undefined}
+                  className={`relative rounded-md px-3 py-2 transition-colors hover:text-white ${
+                    active === l.id ? "text-white" : "text-muted"
+                  }`}
+                >
+                  {l.label}
+                  <span
+                    className={`absolute inset-x-3 -bottom-0.5 h-px origin-left bg-accent transition-transform duration-300 ${
+                      active === l.id ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
+                </a>
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
 
-        <div className="flex items-center">
-          <button
-            className="bg-[#E50914] text-white px-5 py-1.5 rounded-sm text-sm font-bold hover:bg-[#b20710] transition-all active:scale-95 shadow-lg"
-            onClick={() => scrollToSection("contact")}
+        <div className="flex items-center gap-2">
+          <a
+            href={profile.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost hidden !min-h-10 text-sm sm:inline-flex"
           >
-            Contact
+            Resume
+          </a>
+          <button
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((v) => !v)}
+            className="grid size-11 place-items-center rounded-lg border border-line md:hidden"
+          >
+            {open ? <FaXmark size={18} /> : <FaBars size={18} />}
           </button>
         </div>
-      </nav>
-
-      {/* --- MOBILE BOTTOM NAV (App Style) --- */}
-      <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-[#121212]/90 backdrop-blur-lg border-t border-white/10 md:hidden flex items-center justify-around px-2 text-[10px] text-gray-400">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex flex-col items-center space-y-1 active:text-white"
-        >
-          <FaHome size={20} />
-          <span>Home</span>
-        </button>
-        <button
-          onClick={() => scrollToSection("skills")}
-          className="flex flex-col items-center space-y-1 active:text-white"
-        >
-          <FaTools size={18} />
-          <span>Skills</span>
-        </button>
-        <button
-          onClick={() => scrollToSection("projects")}
-          className="flex flex-col items-center space-y-1 active:text-white"
-        >
-          <FaCode size={20} />
-          <span>Projects</span>
-        </button>
-        <button
-          onClick={() => scrollToSection("experience")}
-          className="flex flex-col items-center space-y-1 active:text-white"
-        >
-          <FaBriefcase size={18} />
-          <span>Work</span>
-        </button>
-        <button
-          onClick={() => scrollToSection("contact")}
-          className="flex flex-col items-center space-y-1 active:text-white"
-        >
-          <FaEnvelope size={18} />
-          <span>Contact</span>
-        </button>
       </div>
-    </>
-  );
-};
 
-export default Navbar;
+      {/* scroll progress */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 h-px bg-accent"
+        style={{ width: `${progress}%` }}
+      />
+
+      {open && (
+        <nav
+          id="mobile-menu"
+          aria-label="Mobile"
+          className="h-[calc(100svh-4rem)] overflow-y-auto bg-ink px-5 pb-10 pt-6 md:hidden"
+        >
+          <ul className="space-y-1">
+            {links.map((l, i) => (
+              <li key={l.id}>
+                <a
+                  href={`#${l.id}`}
+                  onClick={() => setOpen(false)}
+                  className="hero-in flex items-baseline justify-between border-b border-line py-4 font-display text-3xl"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  {l.label}
+                  <span className="font-mono text-xs text-muted">0{i + 1}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={profile.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary mt-8 w-full"
+          >
+            Download resume
+          </a>
+        </nav>
+      )}
+    </header>
+  );
+}
